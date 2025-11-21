@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Главная - EdPro{% endblock %}
+
+{% block content %}
+    <h1>Добро пожаловать в EdPro!</h1>
+    <p>Профессиональные курсы для вашего роста.</p>
+
+    <h2>Наши преподаватели</h2>
+    {% for tutor in tutors %}
+        <div>
+            <h3>{{ tutor.user.get_full_name|default:tutor.user.username }}</h3>
+            <p>{{ tutor.expertise }}</p>
+        </div>
+    {% endfor %}
+
+    <h2>Проекты студентов</h2>
+    {% for project in projects %}
+        <div>
+            <h3>{{ project.title }}</h3>
+            <p>Автор: {{ project.student_name }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

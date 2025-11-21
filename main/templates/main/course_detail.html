@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }} - EdPro{% endblock %}
+
+{% block content %}
+    <h1>{{ course.title }}</h1>
+    <p>Преподаватель: {{ course.tutor.user.get_full_name|default:course.tutor.user.username }}</p>
+    <p>Уровень: {{ course.get_level_display }}</p>
+    {% if course.is_free %}
+        <p><span class="badge bg-success">Бесплатный курс</span></p>
+    {% else %}
+        <p>Цена: {{ course.price }} руб.</p>
+    {% endif %}
+    <p>{{ course.description }}</p>
+    <!-- Здесь будет место для контента курса -->
+{% endblock %}

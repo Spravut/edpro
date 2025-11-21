@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Поддержка - EdPro{% endblock %}
+
+{% block content %}
+    <h1>Служба поддержки</h1>
+    <p>Если у вас есть вопросы, пожалуйста, свяжитесь с нами.</p>
+    <!-- Здесь будет форма обратной связи -->
+    <form>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email">
+        </div>
+        <div class="mb-3">
+            <label for="message" class="form-label">Сообщение</label>
+            <textarea class="form-control" id="message" rows="4"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+{% endblock %}

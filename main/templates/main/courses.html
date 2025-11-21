@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Курсы - EdPro{% endblock %}
+
+{% block content %}
+    <h1>Наши курсы</h1>
+    {% for course in courses %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ course.title }}</h5>
+                <p class="card-text">{{ course.description|truncatewords:30 }}</p>
+                <p class="card-text"><small class="text-muted">Преподаватель: {{ course.tutor.user.get_full_name|default:course.tutor.user.username }}</small></p>
+                <p class="card-text">
+                    {% if course.is_free %}
+                        <span class="badge bg-success">Бесплатно</span>
+                    {% else %}
+                        <span class="badge bg-primary">Цена: {{ course.price }} руб.</span>
+                    {% endif %}
+                </p>
+                <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">Подробнее</a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
