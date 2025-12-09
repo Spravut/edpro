@@ -1,11 +1,8 @@
-<!-- main/templates/main/not_a_tutor.html -->
-
 {% extends "base.html" %}
-
 {% block content %}
 <div class="alert alert-warning">
-    <h3>У вас нет прав преподавателя</h3>
-    <p>Только зарегистрированные преподаватели могут создавать курсы.</p>
-    <a href="{% url 'home' %}" class="btn btn-primary">Вернуться на главную</a>
+    <h3>Только преподаватели могут создавать курсы</h3>
+    <p>Зарегистрируйтесь как преподаватель, чтобы добавлять курсы.</p>
+    <a href="{% url 'register_tutor' %}" class="btn btn-primary">Стать преподавателем</a>
 </div>
 {% endblock %}

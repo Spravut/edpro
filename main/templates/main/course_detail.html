@@ -1,16 +1,36 @@
 {% extends "base.html" %}
 
-{% block title %}{{ course.title }} - EdPro{% endblock %}
-
 {% block content %}
-    <h1>{{ course.title }}</h1>
-    <p>Преподаватель: {{ course.tutor.user.get_full_name|default:course.tutor.user.username }}</p>
-    <p>Уровень: {{ course.get_level_display }}</p>
+<h1>{{ course.title }}</h1>
+<p><strong>Преподаватель:</strong> {{ course.tutor.user.get_full_name|default:course.tutor.user.username }}</p>
+<p><strong>Уровень:</strong> {{ course.get_level_display }}</p>
+<p><strong>Цена:</strong> 
+  {% if course.is_free %}
+    <span class="text-success">Бесплатно</span>
+  {% else %}
+    <span class="text-danger">{{ course.price }} руб.</span>
+  {% endif %}
+</p>
+
+{% if can_access %}
+  <div class="alert alert-success">Доступ разрешён. Содержимое курса здесь (видео, уроки и т.д.).</div>
+  <p>{{ course.description }}</p>
+{% else %}
+  <div class="alert alert-warning">
     {% if course.is_free %}
-        <p><span class="badge bg-success">Бесплатный курс</span></p>
+      <!-- Этого не должно быть, но на всякий -->
+      Курс бесплатный, но доступ временно ограничен.
     {% else %}
-        <p>Цена: {{ course.price }} руб.</p>
+      Этот курс платный. Чтобы получить доступ, нужно записаться.
     {% endif %}
-    <p>{{ course.description }}</p>
-    <!-- Здесь будет место для контента курса -->
+  </div>
+
+  {% if user.is_authenticated %}
+    {% if not is_enrolled %}
+      <a href="{% url 'enroll_in_course' course.id %}" class="btn btn-success">Записаться на курс (заглушка)</a>
+    {% endif %}
+  {% else %}
+    <a href="{% url 'login' %}" class="btn btn-primary">Войдите, чтобы записаться</a>
+  {% endif %}
+{% endif %}
 {% endblock %}

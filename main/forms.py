@@ -5,10 +5,19 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Course
 
+class StudentRegistrationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
+
+    class Meta:
+        model = User
+        fields = ("username", "first_name", "last_name", "email", "password1", "password2")
+
 class TutorRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    expertise = forms.CharField(max_length=200, label="Область экспертизы (например: Python, Математика)")
-    bio = forms.CharField(widget=forms.Textarea, label="Краткая биография", required=False)
+    expertise = forms.CharField(max_length=200, label="Область экспертизы")
+    bio = forms.CharField(widget=forms.Textarea, label="Биография", required=False)
 
     class Meta:
         model = User
@@ -26,7 +35,6 @@ class TutorRegistrationForm(UserCreationForm):
                 bio=self.cleaned_data.get("bio", "")
             )
         return user
-
 
 class CourseForm(forms.ModelForm):
     class Meta:
