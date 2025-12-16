@@ -40,13 +40,23 @@ class StudentProject(models.Model):
 
 # main/models.py
 
+# main/models.py
+
 class Enrollment(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='enrollments')
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')  # ← добавлено!
+    student = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='enrollments'  # ← user.enrollments.all()
+    )
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name='enrollments'  # ← course.enrollments.all()
+    )
     enrolled_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('student', 'course')
+        unique_together = ('student', 'course')  # нельзя записаться дважды
 
     def __str__(self):
         return f"{self.student.username} → {self.course.title}"

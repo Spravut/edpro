@@ -1,36 +1,81 @@
 {% extends "base.html" %}
 
+{% block title %}{{ course.title }} — EdPro{% endblock %}
+
 {% block content %}
-<h1>{{ course.title }}</h1>
-<p><strong>Преподаватель:</strong> {{ course.tutor.user.get_full_name|default:course.tutor.user.username }}</p>
-<p><strong>Уровень:</strong> {{ course.get_level_display }}</p>
-<p><strong>Цена:</strong> 
-  {% if course.is_free %}
-    <span class="text-success">Бесплатно</span>
-  {% else %}
-    <span class="text-danger">{{ course.price }} руб.</span>
-  {% endif %}
-</p>
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'courses' %}">Курсы</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ course.title }}</li>
+    </ol>
+</nav>
 
-{% if can_access %}
-  <div class="alert alert-success">Доступ разрешён. Содержимое курса здесь (видео, уроки и т.д.).</div>
-  <p>{{ course.description }}</p>
-{% else %}
-  <div class="alert alert-warning">
-    {% if course.is_free %}
-      <!-- Этого не должно быть, но на всякий -->
-      Курс бесплатный, но доступ временно ограничен.
-    {% else %}
-      Этот курс платный. Чтобы получить доступ, нужно записаться.
-    {% endif %}
-  </div>
+<div class="card shadow">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <h1 class="mb-0">{{ course.title }}</h1>
+            {% if course.is_free %}
+                <span class="badge bg-success fs-6">Бесплатно</span>
+            {% else %}
+                <span class="badge bg-danger fs-6">{{ course.price }} руб.</span>
+            {% endif %}
+        </div>
 
-  {% if user.is_authenticated %}
-    {% if not is_enrolled %}
-      <a href="{% url 'enroll_in_course' course.id %}" class="btn btn-success">Записаться на курс (заглушка)</a>
-    {% endif %}
-  {% else %}
-    <a href="{% url 'login' %}" class="btn btn-primary">Войдите, чтобы записаться</a>
-  {% endif %}
-{% endif %}
+        <p class="text-muted mb-3">
+            <strong>Преподаватель:</strong> {{ course.tutor.user.get_full_name|default:course.tutor.user.username }}
+            &nbsp;|&nbsp;
+            <strong>Уровень:</strong> {{ course.get_level_display }}
+        </p>
+
+        {% if can_access %}
+            <div class="alert alert-success d-flex align-items-center mb-4">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <div>Доступ разрешён. Вы можете проходить курс.</div>
+            </div>
+            <div class="mt-4">
+                <h3>Описание</h3>
+                <p>{{ course.description }}</p>
+                <!-- Здесь будет список уроков, видео и т.д. -->
+                <div class="mt-4 p-3 bg-light rounded">
+                    <h5>Содержание курса</h5>
+                    <ul class="list-unstyled">
+                        <li>• Урок 1: Введение</li>
+                        <li>• Урок 2: Основы</li>
+                        <li>• ...</li>
+                    </ul>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-warning d-flex align-items-center mb-4">
+                {% if course.is_free %}
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <div>Курс бесплатный, но доступ временно ограничен.</div>
+                {% else %}
+                    <i class="bi bi-lock-fill me-2"></i>
+                    <div>Этот курс платный. Запишитесь, чтобы получить доступ.</div>
+                {% endif %}
+            </div>
+
+            <div class="d-flex gap-2">
+                {% if user.is_authenticated %}
+                    {% if not is_enrolled %}
+                        <a href="{% url 'enroll_in_course' course.id %}" class="btn btn-success">
+                            Записаться на курс
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary">Войдите, чтобы записаться</a>
+                {% endif %}
+
+                {% if is_tutor and course.tutor.user == user %}
+                    <a href="{% url 'edit_course' course.id %}" class="btn btn-outline-secondary">Редактировать</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'courses' %}" class="btn btn-link">&larr; Вернуться ко всем курсам</a>
+</div>
 {% endblock %}
